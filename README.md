@@ -15,6 +15,23 @@ Company knowledge was spread across documents and systems, and people had to sea
 4. **Retrieve:** The agent searches the vector store for the most relevant passages. For customer questions and live data, it calls internal APIs through HTTP tools.
 5. **Answer:** The model replies using what it retrieved, with conversation memory so follow-up questions work.
 
+## Architecture
+
+```mermaid
+flowchart LR
+A["Tally form"] --> D["Normalize to one lead format"]
+B["Google Form"] --> D
+C["Email"] --> E["LLM extracts details"]
+E --> D
+D --> F["Enrich via APIs"]
+F --> G{"Duplicate check"}
+G --> H["HubSpot"]
+G --> I["Google Sheets log"]
+H --> J["Slack alert to sales"]
+I --> J
+K["Error workflow"] -.-> L["Slack failure alert"]
+```
+
 ## Problems Solved
 - **Stale information.** Regular retrieval keeps the knowledge base current, so the assistant isn't answering from outdated documents.
 - **Customer questions.** I gave the agent access to customer information, so it can answer account-related questions directly instead of sending people to look them up.
